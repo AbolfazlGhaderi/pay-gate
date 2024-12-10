@@ -14,7 +14,7 @@ export class ResponseControllerInterceptor implements NestInterceptor
         const statusCode = ctx.statusCode;
 
         return next.handle().pipe(
-            map((data) =>
+            map((data: any) =>
             {
                 if (data && data.data !== undefined)
                 {
@@ -22,10 +22,9 @@ export class ResponseControllerInterceptor implements NestInterceptor
                         status:'success',
                         statusCode: statusCode,
                         timestamp: Date.now(),
-                        data: data.data,
+                        data: data,
                     };
                 }
-                
                 return {
                     status:'success',
                     statusCode: statusCode,

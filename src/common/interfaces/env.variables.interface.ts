@@ -2,11 +2,7 @@
 export interface EnvVariables
 {
     PORT: string;
-    DB_PORT: string;
-    DB_USERNAME: string;
-    DB_PASSWORD: string;
-    DB_NAME: string;
-    DB_HOST: string;
+    MONGO_URI: string;
     MAIL_HOST: string;
     MAIL_PORT: string;
     MAIL_USER: string;
