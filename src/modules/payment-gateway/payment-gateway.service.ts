@@ -1,6 +1,8 @@
 import { HttpException, Injectable, Logger } from '@nestjs/common'
 import { ZarinpalPService } from './services/payment-zarinpal.service'
 import { PaymentZibalService } from './services/payment-zibal.service'
+import { ZarinpalGCallbackDto } from './dtos/zarinpal-gateway-callback.dto'
+import { CreateRequestPaymentDto } from './dtos/create-request-payment.dto'
 
 @Injectable()
 export class PaymentGatewayService
@@ -12,18 +14,29 @@ export class PaymentGatewayService
         private paymentZibalService: PaymentZibalService,
     )
     {}
-    async test()
+    async createRequestPayment(data : CreateRequestPaymentDto)
     {
         try
         {
-            return await this.ZarinpalPService.requestPayment(
-                {
-                    merchant_id: process.env.ZARINPAL_MERCHANT_ID,
-                    amount: '2300000',
-                    description: 'payment test',
-                    callback_url: `${process.env.DOMAIN_URL}:${process.env.PORT}/payment-gateway/zarinpal-callback`,
-                },
-            )
+            if (data.gateway === 'zarinpal')
+            {
+                return await this.ZarinpalPService.requestPayment(
+                    {
+                        merchant_id: process.env.ZARINPAL_MERCHANT_ID,
+                        amount: data.amount,
+                        description: data.description,
+                        callback_url: `${process.env.DOMAIN_URL}:${process.env.PORT}/payment-gateway/zarinpal-callback`,
+                    },
+                )
+            }
+            else if (data.gateway === 'zibal')
+            {
+                return await this.paymentZibalService.requestPayment()
+            }
+            else
+            {
+                throw new HttpException('gateway not found', 404)
+            }
         }
         catch (error)
         {
@@ -33,5 +46,10 @@ export class PaymentGatewayService
 
             throw new HttpException('something wrong', 500)
         }
+    }
+
+    async zarinpalCallback(data: ZarinpalGCallbackDto)
+    {
+
     }
 }
