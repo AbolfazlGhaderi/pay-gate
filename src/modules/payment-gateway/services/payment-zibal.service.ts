@@ -7,10 +7,7 @@ export class PaymentZibalService implements PaymentGatewayInterface
 
     constructor()
     {}
-    startPay(): Promise<unknown>
-    {
-        throw new Error('Method not implemented.')
-    }
+
     requestPayment(): Promise<unknown>
     {
         throw new Error('Method not implemented.')

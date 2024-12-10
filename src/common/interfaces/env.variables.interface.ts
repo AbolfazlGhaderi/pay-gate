@@ -2,6 +2,7 @@
 export interface EnvVariables
 {
     PORT: string;
+    DOMAIN_URL: string;
     MONGO_URI: string;
     MAIL_HOST: string;
     MAIL_PORT: string;

@@ -4,6 +4,7 @@ import { EnvVariables } from '@/common/interfaces/env.variables.interface'
 
 export const envTemplate: EnvVariables = {
     PORT: '',
+    DOMAIN_URL: '',
     MONGO_URI:'',
     MAIL_HOST:'',
     MAIL_PORT:'',

@@ -1,5 +1,5 @@
 import { HttpException, Injectable, Logger } from '@nestjs/common'
-import { PaymentZarinpalService } from './services/payment-zarinpal.service'
+import { ZarinpalPService } from './services/payment-zarinpal.service'
 import { PaymentZibalService } from './services/payment-zibal.service'
 
 @Injectable()
@@ -8,7 +8,7 @@ export class PaymentGatewayService
     logger: Logger = new Logger(PaymentGatewayService.name)
 
     constructor(
-        private paymentZarinpalService: PaymentZarinpalService,
+        private ZarinpalPService: ZarinpalPService,
         private paymentZibalService: PaymentZibalService,
     )
     {}
@@ -16,12 +16,12 @@ export class PaymentGatewayService
     {
         try
         {
-            return await this.paymentZarinpalService.requestPayment(
+            return await this.ZarinpalPService.requestPayment(
                 {
-                    merchant_id:'1344b5d4-0048-11e8-94db-005056a205be',
-                    amount:'2300000',
-                    description:'خرید خودرو',
-                    callback_url:'http://localhost:3000/payment-gateway/zarinpal-callback',
+                    merchant_id: process.env.ZARINPAL_MERCHANT_ID,
+                    amount: '2300000',
+                    description: 'payment test',
+                    callback_url: `${process.env.DOMAIN_URL}:${process.env.PORT}/payment-gateway/zarinpal-callback`,
                 },
             )
         }
