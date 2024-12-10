@@ -1,7 +1,8 @@
-import { IsEnum, IsNumberString, IsObject, IsOptional, IsString, ValidateNested } from 'class-validator'
+import { Type } from 'class-transformer'
+import { IsArray, IsBoolean, IsEnum, IsNumberString, IsObject, IsOptional, IsString, ValidateNested } from 'class-validator'
 
 
-class MetaDataDto
+class ZarinpalMetadataDto
 {
     @IsString()
     @IsOptional()
@@ -14,6 +15,25 @@ class MetaDataDto
     @IsOptional()
     @IsString()
     card_pan?: string
+}
+class ZibalMetadataDto
+{
+    @IsString()
+    @IsOptional()
+    mobile?: string
+
+    @IsOptional()
+    @IsArray()
+    @IsString({ each: true })
+    allowedCards?: string[]
+
+    @IsString()
+    @IsOptional()
+    nationalCode?: string
+
+    @IsBoolean()
+    @IsOptional()
+    checkMobileWithCard?: boolean
 }
 
 export class CreateRequestPaymentDto
@@ -29,6 +49,13 @@ export class CreateRequestPaymentDto
 
     @IsObject()
     @IsOptional()
-    @ValidateNested()
-    metadata?: MetaDataDto
+    @ValidateNested({ each: true })
+    @Type(() => ZarinpalMetadataDto)
+    metadata_zarinpal?: ZarinpalMetadataDto
+
+    @IsObject()
+    @IsOptional()
+    @ValidateNested({ each: true })
+    @Type(() => ZibalMetadataDto)
+    metadata_zibal?: ZibalMetadataDto
 }

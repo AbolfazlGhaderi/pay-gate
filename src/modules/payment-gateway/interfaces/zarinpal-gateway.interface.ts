@@ -1,4 +1,4 @@
-export interface ZarinpalGRequestInterface
+export interface IZarinpalGRequest
 {
     merchant_id: string
     amount: string
@@ -8,6 +8,6 @@ export interface ZarinpalGRequestInterface
     metadata?: {
         mobile?: string
         email?: string
-        card_pan?: number
+        card_pan?: string
     }
 }

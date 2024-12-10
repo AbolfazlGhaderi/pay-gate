@@ -1,6 +1,6 @@
 import { HttpException, Injectable, Logger } from '@nestjs/common'
 import { ZarinpalPService } from './services/payment-zarinpal.service'
-import { PaymentZibalService } from './services/payment-zibal.service'
+import { ZibalPService } from './services/payment-zibal.service'
 import { ZarinpalGCallbackDto } from './dtos/zarinpal-gateway-callback.dto'
 import { CreateRequestPaymentDto } from './dtos/create-request-payment.dto'
 
@@ -11,7 +11,7 @@ export class PaymentGatewayService
 
     constructor(
         private ZarinpalPService: ZarinpalPService,
-        private paymentZibalService: PaymentZibalService,
+        private paymentZibalService: ZibalPService,
     )
     {}
     async createRequestPayment(data : CreateRequestPaymentDto)
@@ -20,18 +20,28 @@ export class PaymentGatewayService
         {
             if (data.gateway === 'zarinpal')
             {
-                return await this.ZarinpalPService.requestPayment(
+                return await this.ZarinpalPService.createRequestPayment(
                     {
                         merchant_id: process.env.ZARINPAL_MERCHANT_ID,
                         amount: data.amount,
                         description: data.description,
                         callback_url: `${process.env.DOMAIN_URL}:${process.env.PORT}/payment-gateway/zarinpal-callback`,
+                        metadata: data?.metadata_zarinpal,
                     },
                 )
             }
             else if (data.gateway === 'zibal')
             {
-                return await this.paymentZibalService.requestPayment()
+                return await this.paymentZibalService.createRequestPayment({
+                    merchant: process.env.ZIBAL_MERCHANT_ID,
+                    amount: data.amount,
+                    description: data.description,
+                    callbackUrl: `${process.env.DOMAIN_URL}:${process.env.PORT}/payment-gateway/zibal-callback`,
+                    mobile: data.metadata_zibal?.mobile,
+                    allowedCards: data.metadata_zibal?.allowedCards,
+                    nationalCode: data.metadata_zibal?.nationalCode,
+                    checkMobileWithCard: data.metadata_zibal?.checkMobileWithCard,
+                })
             }
             else
             {
@@ -49,6 +59,11 @@ export class PaymentGatewayService
     }
 
     async zarinpalCallback(data: ZarinpalGCallbackDto)
+    {
+
+    }
+
+    async zibalCallback(data: unknown)
     {
 
     }

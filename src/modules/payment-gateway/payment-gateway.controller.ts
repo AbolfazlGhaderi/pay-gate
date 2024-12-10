@@ -20,6 +20,12 @@ export class PaymentGatewayController
         return await this.paymentGatewayService.zarinpalCallback(data)
     }
 
+    @Get('zibal-callback')
+    async zibalCallback_Handler(@Query() data: unknown)
+    {
+        return await this.paymentGatewayService.zibalCallback(data)
+    }
+
     @Post('request')
     @Create_RequestGatewaySwaggerDecorator()
     async createRequestPayment_Handler(@Body() data: CreateRequestPaymentDto)

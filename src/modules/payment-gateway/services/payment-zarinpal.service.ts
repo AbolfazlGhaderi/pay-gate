@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/await-thenable */
 import { HttpException, Injectable, Logger } from '@nestjs/common'
 import { PaymentGatewayInterface } from '../interfaces/payment-gateway-interface.interface'
-import { ZarinpalGRequestInterface } from '../interfaces/zarinpal-gateway.interface'
+import { IZarinpalGRequest } from '../interfaces/zarinpal-gateway.interface'
 import { HttpService } from '@nestjs/axios'
 import { catchError, lastValueFrom, map } from 'rxjs'
 
@@ -15,9 +15,11 @@ export class ZarinpalPService implements PaymentGatewayInterface
     )
     {}
 
-    async requestPayment(data: ZarinpalGRequestInterface): Promise<unknown>
+    async createRequestPayment(data: IZarinpalGRequest): Promise<unknown>
     {
-        const result = await lastValueFrom(
+        data = JSON.parse(JSON.stringify(data))
+
+        const responseFromRequestGatewayUrl = await lastValueFrom(
             this.httpService.post(process.env.ZARINPAL_REQUEST_PAYMENT_URL, data, {})
                 .pipe(map((response) => response.data))
                 .pipe(catchError((error) =>
@@ -27,7 +29,8 @@ export class ZarinpalPService implements PaymentGatewayInterface
                 })),
         )
 
-        const { code, authority } = result.data
+        const { code, authority } = responseFromRequestGatewayUrl.data
+
         if (code === 100 && authority)
         {
             return {
@@ -36,7 +39,8 @@ export class ZarinpalPService implements PaymentGatewayInterface
                 startPaymentUrl: `${process.env.ZARINPAL_START_PAYMENT_URL}/${authority}`,
             }
         }
-        this.logger.verbose(`connection fail in the zarinpal | Result : ${JSON.stringify(result)}`)
+
+        this.logger.verbose(`connection fail in the zarinpal | Result : ${JSON.stringify(responseFromRequestGatewayUrl)}`)
         throw new HttpException('connection fail in the zarinpal', 400)
     }
 

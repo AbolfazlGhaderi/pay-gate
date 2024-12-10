@@ -15,12 +15,21 @@ export function Create_RequestGatewaySwaggerDecorator()
                     gateway: { type: 'string', enum: [ 'zarinpal', 'zibal' ] },
                     amount: { type: 'string' },
                     description: { type: 'string' },
-                    metadata: {
+                    metadata_zarinpal: {
                         type: 'object',
                         properties: {
                             mobile: { type: 'string' },
                             email: { type: 'string' },
                             card_pan: { type: 'string' },
+                        },
+                    },
+                    metadata_zibal: {
+                        type: 'object',
+                        properties: {
+                            mobile: { type: 'string' },
+                            allowedCards: { type: 'array' },
+                            nationalCode: { type: 'string' },
+                            checkMobileWithCard: { type: 'string' },
                         },
                     },
                 },
@@ -32,9 +41,15 @@ export function Create_RequestGatewaySwaggerDecorator()
                         gateway: 'zarinpal',
                         amount: '1000',
                         description: 'test',
-                        metadata: {
+                        metadata_zarinpal: {
                             mobile: '09100368361',
                             email: 'dev.ghaderi@gmail.com',
+                        },
+                        metadata_zibal: {
+                            mobile: '09100368361',
+                            allowedCards: [ '1234567890123456' ],
+                            nationalCode: '1234567890',
+                            checkMobileWithCard: true,
                         },
                     },
                 },
