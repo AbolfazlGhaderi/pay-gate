@@ -1,5 +1,5 @@
 
-# pay-gate
+# pay-gate - ⚠️ In progress!
 
 ### 🎯 Introduction
 **pay-gate** is a powerful tool for integrating and managing multiple payment gateways. Leveraging the **Strategy Design Pattern**, this project allows seamless handling of various gateways and is designed to be easily incorporated into your applications.
